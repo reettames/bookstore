@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 
 import hh.bgp064.bookstore.domain.Book;
 import hh.bgp064.bookstore.domain.BookRepository;
+import hh.bgp064.bookstore.domain.CatRepository;
+import hh.bgp064.bookstore.domain.Category;
 
 @SpringBootApplication
 public class BookstoreApplication {
@@ -19,17 +21,27 @@ public class BookstoreApplication {
 	}
 
 	@Bean
-	public CommandLineRunner studentDemo(BookRepository repository) {
+	public CommandLineRunner studentDemo(BookRepository bookRepository, CatRepository catRepository) {
 		return (args) -> {
 			log.info("save a couple of books");
-			repository.save(new Book("Kirjayksi", "Meikäläinen", 1982, "2938LOL"));
-			repository.save(new Book("Kirjakaksi", "Meikäläinen",1976, "JEE927"));	
+			Category catScifi = new Category("scifi");
+			catRepository.save(catScifi);
+			Category catComic = new Category("comic");
+			catRepository.save(catComic);
+			Category catKids = new Category("kids");
+			catRepository.save(catKids);
+			
+			bookRepository.save(new Book("Kirjayksi", "Meikäläinen", 1982, "2938LOL", catScifi ));
+			bookRepository.save(new Book("Kirjakaksi", "Meikäläinen",1976, "JEE927", catComic));
 			
 			log.info("fetch all books");
-			for (Book book : repository.findAll()) {
+			for (Book book : bookRepository.findAll()) {
 				log.info(book.toString());
 			}
-
+			log.info("fetch all categories");
+			for (Category category : catRepository.findAll()) {
+				log.info(category.toString());
+			}
 		};
 	}
 }
