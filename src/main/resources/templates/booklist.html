@@ -1,11 +1,17 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <title>Booklist</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
 	<h1>Books</h1>
+	<div> Welcome [[${#httpServletRequest.remoteUser}]]</div>
+	<div style="padding:20px 0">
+		<form th:action="@{/logout}" method="post">
+			<input type="submit" value="Sign Out" class="btn btn-sm btn-danger"/>
+		</form>
+	</div>
     <table>
 		<tr>
 		    <th>Title</th>
@@ -14,6 +20,7 @@
 		    <th>Year</th>
 		    <th>Price</th>
 		     <th>Category</th>
+		     <th sec:authorize="hasRole('ADMIN')"></th>
 		</tr>  
     	<tr th:each = "book : ${books}">
     		<td th:text="${book.title}"></td>
@@ -22,7 +29,7 @@
     		<td th:text="${book.year}"></td>
     		<td th:text="${book.price}"></td>
     		<td th:text="${book.category.name}"></td>
-    		<td><a th:href="@{/delete/{id}(id=${book.id})}">Delete</a></td>
+    		<td sec:authorize="hasRole('ADMIN')"><a th:href="@{/delete/{id}(id=${book.id})}">Delete</a></td>
     		<td><a th:href="@{/edit/{id}(id=${book.id})}">Edit</a></td>
     	</tr>
      </table>
